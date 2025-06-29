@@ -3,17 +3,13 @@ const bcrypt = require('bcrypt');
 const UserModel = require('../models/userModel');
 
 const createEmployee = asyncHandler(async (req, res) => {
-  const { fullName, email, password, phoneNumber, birthday, gender, image } =
-    req.body;
-
+  const { fullName, email, password, phoneNumber, birthday, gender, image } = req.body;
   const existing = await UserModel.findOne({ email });
   if (existing) {
     res.status(400);
     throw new Error('Email already exists');
   }
-
   const hashedPassword = await bcrypt.hash(password, 10);
-
   const newEmployee = await UserModel.create({
     fullName,
     email,
@@ -24,7 +20,6 @@ const createEmployee = asyncHandler(async (req, res) => {
     image,
     role: 'employee',
   });
-
   res.status(201).json({
     success: true,
     message: 'Employee created successfully',
@@ -38,39 +33,22 @@ const createEmployee = asyncHandler(async (req, res) => {
 });
 
 const updateProfile = asyncHandler(async (req, res) => {
-  const {
-    fullName,
-    phoneNumber,
-    birthday,
-    gender,
-    image,
-    isBlocked,
-    isLoyalCustomer,
-  } = req.body;
+  const { fullName, phoneNumber, birthday, gender, image, isBlocked, isLoyalCustomer } = req.body;
   const user = await UserModel.findById(req.user._id);
-
   if (!user) {
     res.status(404);
     throw new Error('User not found');
   }
-
   user.fullName = fullName ?? user.fullName;
   user.phoneNumber = phoneNumber ?? user.phoneNumber;
   user.birthday = birthday ?? user.birthday;
   user.gender = gender ?? user.gender;
   user.image = image ?? user.image;
-
   if (req.user.role === 'admin') {
-    user.isBlocked =
-      typeof isBlocked === 'boolean' ? isBlocked : user.isBlocked;
-    user.isLoyalCustomer =
-      typeof isLoyalCustomer === 'boolean'
-        ? isLoyalCustomer
-        : user.isLoyalCustomer;
+    user.isBlocked = typeof isBlocked === 'boolean' ? isBlocked : user.isBlocked;
+    user.isLoyalCustomer = typeof isLoyalCustomer === 'boolean' ? isLoyalCustomer : user.isLoyalCustomer;
   }
-
   const updatedUser = await user.save();
-
   res.status(200).json({
     success: true,
     message: 'Profile updated successfully',
@@ -91,21 +69,17 @@ const updateProfile = asyncHandler(async (req, res) => {
 const changePassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   const user = await UserModel.findById(req.user._id);
-
   if (!user) {
     res.status(404);
     throw new Error('User not found');
   }
-
   const isMatch = await bcrypt.compare(currentPassword, user.password);
   if (!isMatch) {
     res.status(400);
     throw new Error('Current password is incorrect');
   }
-
   user.password = await bcrypt.hash(newPassword, 10);
   await user.save();
-
   res.status(200).json({
     success: true,
     message: 'Password changed successfully',
@@ -118,7 +92,6 @@ const getProfile = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('User not found');
   }
-
   res.status(200).json({
     success: true,
     message: 'Get user profile successfully',
@@ -128,12 +101,10 @@ const getProfile = asyncHandler(async (req, res) => {
 
 const getUsers = asyncHandler(async (req, res) => {
   const { role, isBlocked, isLoyalCustomer, search } = req.query;
-
   const filter = {};
   if (role) filter.role = role;
   if (isBlocked !== undefined) filter.isBlocked = isBlocked === 'true';
-  if (isLoyalCustomer !== undefined)
-    filter.isLoyalCustomer = isLoyalCustomer === 'true';
+  if (isLoyalCustomer !== undefined) filter.isLoyalCustomer = isLoyalCustomer === 'true';
   if (search) {
     filter.$or = [
       { fullName: { $regex: search, $options: 'i' } },
@@ -141,14 +112,19 @@ const getUsers = asyncHandler(async (req, res) => {
       { phoneNumber: { $regex: search, $options: 'i' } },
     ];
   }
-
-  const users = await UserModel.find(filter)
-    .select('-password')
-    .sort({ createdAt: -1 });
-
+  const users = await UserModel.find(filter).select('-password').sort({ createdAt: -1 });
   res.status(200).json({
     success: true,
     message: 'Fetched users successfully',
+    data: users,
+  });
+});
+
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await UserModel.find().select('-password').sort({ createdAt: -1 });
+  res.status(200).json({
+    success: true,
+    message: 'Fetched all users successfully',
     data: users,
   });
 });
@@ -166,12 +142,12 @@ const getUserById = asyncHandler(async (req, res) => {
   });
 });
 
-const UserController = {
+module.exports = {
   createEmployee,
   updateProfile,
   changePassword,
   getProfile,
   getUsers,
+  getAllUsers,
   getUserById,
 };
-module.exports = UserController;
