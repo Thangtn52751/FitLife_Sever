@@ -6,6 +6,9 @@ const morgan = require('morgan');
 const errorMiddleware = require('../src/middlewares/errorMiddleware');
 const authRouter = require('../src/routers/authRouter');
 const userRouter = require('../src/routers/userRouter');
+const waterRouter = require('./routers/waterGoal');
+const songRouter = require("./routers/songRouter");
+const path = require("path");
 
 dotenv.config();
 const app = express();
@@ -16,7 +19,9 @@ app.use(morgan('dev'));
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
-
+app.use('/api/water', waterRouter);
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/songs", songRouter);
 app.use((req, res) => {
   res.status(404).json({ message: 'API route not found' });
 });
