@@ -1,37 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const AuthMiddleware = require('../middlewares/authMiddleware');
-const UserController = require('../controllers/userController');
+const {
+  getAllUsers,
+  getUsers,
+  getUserById,
+  createEmployee,
+  updateProfile,
+  changePassword,
+  getProfile,
+} = require('../controllers/userController');
 
-router.post(
-  '/create-employee',
-  AuthMiddleware.verifyToken,
-  AuthMiddleware.isAdmin,
-  UserController.createEmployee,
-);
-router.put(
-  '/profile',
-  AuthMiddleware.verifyToken,
-  UserController.updateProfile,
-);
-router.put(
-  '/change-password',
-  AuthMiddleware.verifyToken,
-  UserController.changePassword,
-);
-router.get('/profile', AuthMiddleware.verifyToken, UserController.getProfile);
-router.get(
-  '/',
-  AuthMiddleware.verifyToken,
-  AuthMiddleware.isEmployeeOrAdmin,
-  UserController.getUsers,
-);
-
-router.get(
-  '/:id',
-  AuthMiddleware.verifyToken,
-  AuthMiddleware.isEmployeeOrAdmin,
-  UserController.getUserById,
-);
+router.get('/', getAllUsers);
+router.get('/filter', getUsers);
+router.get('/:id', getUserById);
+router.post('/employees', createEmployee);
+router.put('/profile', updateProfile);
+router.put('/change-password', changePassword);
+router.get('/profile', getProfile);
 
 module.exports = router;
