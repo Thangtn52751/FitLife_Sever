@@ -20,10 +20,12 @@ const gpsRouter = require("./routers/gpsRouter");
 const stepRouter = require("./routers/stepRouter");
 const exerciseRouter = require("./routers/exerciseRouter");
 const userExerciseRouter = require("./routers/userExerciseRouter");
+const exerciseRoundRoutes = require("./routers/exerciseRoundRoutes");
 
 
 dotenv.config();
 const app = express();
+
 
 app.use(cors());
 app.use(express.json());
@@ -35,6 +37,9 @@ app.use('/api/diaries', diaryRouter);
 
 
 app.use('/api/water', waterRouter);
+// Cấu hình phục vụ video tĩnh
+app.use('/videos', express.static(path.join(__dirname, 'video')));
+
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/songs", songRouter);
 
@@ -46,6 +51,7 @@ app.use("/api/gps", gpsRouter);
 app.use("/api/steps", stepRouter);
 app.use("/api/exercises", exerciseRouter);
 app.use("/api/user-exercises", userExerciseRouter);
+app.use("/api/exercise-rounds", exerciseRoundRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'API route not found' });

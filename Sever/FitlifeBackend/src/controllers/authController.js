@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
 
 const generateToken = user =>
   jwt.sign(
-    { id: user._id, email: user.email, role: user.role },
+    { _id: user._id, email: user.email, role: user.role },
     process.env.SECRET_KEY,
     { expiresIn: '1d' }
   );
@@ -49,7 +49,7 @@ exports.register = asyncHandler(async (req, res) => {
     data: {
       token: generateToken(user),
       user: {
-        id: user._id,
+        _id: user._id,
         email: user.email,
         fullName: user.fullName,
         image: user.image,
@@ -81,7 +81,7 @@ exports.login = asyncHandler(async (req, res) => {
     data: {
       token: generateToken(user),
       user: {
-        id: user._id,
+        _id: user._id,
         email: user.email,
         fullName: user.fullName,
         image: user.image,
