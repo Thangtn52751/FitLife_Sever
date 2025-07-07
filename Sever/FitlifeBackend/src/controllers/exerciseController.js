@@ -1,6 +1,6 @@
 const Exercise = require("../models/exerciseModel");
 
-// Tạo bài tập mới
+// Tạo bài tập
 exports.createExercise = async (req, res) => {
     try {
         const exercise = await Exercise.create(req.body);
