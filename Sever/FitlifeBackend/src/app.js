@@ -37,8 +37,8 @@ app.use('/api/diaries', diaryRouter);
 
 
 app.use('/api/water', waterRouter);
-// Cấu hình phục vụ video tĩnh
-app.use('/videos', express.static(path.join(__dirname, 'video')));
+// // Cấu hình phục vụ video tĩnh
+// app.use('/videos', express.static(path.join(__dirname, 'video')));
 
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/songs", songRouter);
@@ -52,7 +52,7 @@ app.use("/api/steps", stepRouter);
 app.use("/api/exercises", exerciseRouter);
 app.use("/api/user-exercises", userExerciseRouter);
 app.use("/api/exercise-rounds", exerciseRoundRoutes);
-app.use('/videos', videoRoute);
+app.use('/api/videos', videoRoute); // <-- chưa có
 
 app.use((req, res) => {
   res.status(404).json({ message: 'API route not found' });
