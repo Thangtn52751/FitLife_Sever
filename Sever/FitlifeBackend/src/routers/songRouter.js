@@ -9,7 +9,7 @@ router.post("/admin/addSong", verifyToken,isAdmin, upload.single("audio"),songCo
 
 //Xem, sửa, xóa (chỉ Admin)
 router.get("/admin/getAllSong", verifyToken,isAdmin,songController.getAllSongs);
-router.delete("/admin/delete",verifyToken,isAdmin,songController.deleteSong);
+router.delete("/admin/delete/:id",verifyToken,isAdmin,songController.deleteSong);
 router.put("/admin/song/:id", verifyToken,isAdmin,songController.updateSong);
 
 //Xem tất cả bài hát (User)

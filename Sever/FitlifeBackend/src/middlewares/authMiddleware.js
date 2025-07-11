@@ -13,7 +13,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const user = await UserModel.findById(decoded.id);
+    const user = await UserModel.findById(decoded._id);
 
     if (!user) {
       res.status(403);
