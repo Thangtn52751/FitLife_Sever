@@ -21,8 +21,7 @@ const stepRouter = require("./routers/stepRouter");
 const exerciseRouter = require("./routers/exerciseRouter");
 const userExerciseRouter = require("./routers/userExerciseRouter");
 const exerciseRoundRoutes = require("./routers/exerciseRoundRoutes");
-const videoRoute = require("./routers/videoRoute")
-
+const historyRouter = require('./routers/historyRouter')
 dotenv.config();
 const app = express();
 
@@ -52,7 +51,7 @@ app.use("/api/steps", stepRouter);
 app.use("/api/exercises", exerciseRouter);
 app.use("/api/user-exercises", userExerciseRouter);
 app.use("/api/exercise-rounds", exerciseRoundRoutes);
-app.use('/api/videos', videoRoute); // <-- chưa có
+app.use("/api/history", historyRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'API route not found' });
