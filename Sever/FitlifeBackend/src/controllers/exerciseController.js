@@ -4,11 +4,6 @@ const ExerciseRound = require("../models/exerciseRoundModel");
 // Tạo bài tập kèm rounds
 exports.createExercise = async (req, res) => {
     try {
-<<<<<<< HEAD
-        const exercise = await Exercise.create(req.body);
-        res.status(201).json(exercise);
-    } catch (err) { 
-=======
         const {
             title,
             description,
@@ -48,7 +43,6 @@ exports.createExercise = async (req, res) => {
             exerciseId: exercise._id,
         });
     } catch (err) {
->>>>>>> a032d0142515bf078108bc983653f04458645b42
         res.status(400).json({ error: err.message });
     }
 };
