@@ -5,7 +5,7 @@ exports.createExercise = async (req, res) => {
     try {
         const exercise = await Exercise.create(req.body);
         res.status(201).json(exercise);
-    } catch (err) {
+    } catch (err) { 
         res.status(400).json({ error: err.message });
     }
 };
@@ -14,7 +14,7 @@ exports.createExercise = async (req, res) => {
 exports.getExercises = async (req, res) => {
     try {
         const exercises = await Exercise.find();
-        res.json(exercises);
+        res.json({ success: true, data: exercises });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
