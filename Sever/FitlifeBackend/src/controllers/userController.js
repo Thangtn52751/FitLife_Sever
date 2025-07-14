@@ -142,6 +142,38 @@ const getUserById = asyncHandler(async (req, res) => {
   });
 });
 
+const updateUserById = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log('Updating user with ID:', id);
+    console.log('Payload:', req.body);
+
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Đồng bộ field từ frontend
+    user.fullName = req.body.fullName || req.body.name || user.fullName;
+    user.phoneNumber = req.body.phone || req.body.phoneNumber || user.phoneNumber;
+    user.image = req.body.avatar || req.body.image || user.image;
+    user.gender = req.body.gender ?? user.gender;
+    user.role = req.body.role ?? user.role;
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      data: updatedUser,
+    });
+  } catch (err) {
+    console.error('Update user failed:', err);
+    res.status(500).json({ message: 'Error updating user', error: err.message });
+  }
+});
+
+
 module.exports = {
   createEmployee,
   updateProfile,
@@ -150,4 +182,5 @@ module.exports = {
   getUsers,
   getAllUsers,
   getUserById,
+  updateUserById,
 };
