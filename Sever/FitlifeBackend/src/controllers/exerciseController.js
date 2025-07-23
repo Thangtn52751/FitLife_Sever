@@ -4,45 +4,10 @@ const ExerciseRound = require("../models/exerciseRoundModel");
 // Tạo bài tập kèm rounds
 exports.createExercise = async (req, res) => {
     try {
-        const {
-            title,
-            description,
-            durationMin,
-            calories,
-            imageUrl,
-            videoUrl,
-            level,
-            rounds, // 👈 lấy rounds từ body nếu có
-        } = req.body;
+        const exercise = await Exercise.create(req.body);
+        res.status(201).json(exercise);
+    } catch (err) { 
 
-        // Bước 1: tạo exercise
-        const exercise = await Exercise.create({
-            title,
-            description,
-            durationMin,
-            calories,
-            imageUrl,
-            videoUrl,
-            level,
-        });
-
-        // Bước 2: nếu có rounds, tạo từng round kèm theo exerciseId
-        if (Array.isArray(rounds) && rounds.length > 0) {
-            const roundDocs = rounds.map((round, index) => ({
-                title: round.title,
-                durationSec: round.durationSec,
-                order: round.order || index + 1,
-                exerciseId: exercise._id,
-            }));
-
-            await ExerciseRound.insertMany(roundDocs);
-        }
-
-        res.status(201).json({
-            message: "Tạo bài tập và các round thành công",
-            exerciseId: exercise._id,
-        });
-    } catch (err) {
         res.status(400).json({ error: err.message });
     }
 };
